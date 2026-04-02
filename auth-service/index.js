@@ -14,6 +14,9 @@ app.use('/api/auth', require('./routes/authRoutes'));
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Auth Microservice Connected');
-    app.listen(process.env.PORT || 8080);
+    const port = process.env.PORT || 8080;
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`✅ Auth Microservice running on port ${port}`);
+    });
   })
   .catch(err => console.error('❌ MongoDB Error:', err));

@@ -14,6 +14,9 @@ app.use('/api/courses', require('./routes/courseRoutes'));
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Cours Microservice Connected');
-    app.listen(process.env.PORT || 4000);
+    const port = process.env.PORT || 4000;
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`✅ Cours Microservice running on port ${port}`);
+    });
   })
   .catch(err => console.error('❌ MongoDB Error:', err));

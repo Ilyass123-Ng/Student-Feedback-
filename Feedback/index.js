@@ -14,6 +14,9 @@ app.use('/api/feedback', require('./routes/feedbackRoutes'));
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Feedback Microservice Connected');
-    app.listen(process.env.PORT || 5000);
+    const port = process.env.PORT || 5000;
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`✅ Feedback Microservice running on port ${port}`);
+    });
   })
   .catch(err => console.error('❌ MongoDB Error:', err));
