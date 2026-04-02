@@ -1,0 +1,75 @@
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - mongodb_data:/data/db
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "${AUTH_PORT}:${AUTH_PORT}"
+    environment:
+      - PORT=${AUTH_PORT}
+      - MONGO_URI=${MONGO_URI_AUTH}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    command: node --watch index.js
+    depends_on:
+      - mongodb
+
+  cours-service:
+    build: ./Cours
+    ports:
+      - "${COURS_PORT}:${COURS_PORT}"
+    environment:
+      - PORT=${COURS_PORT}
+      - MONGO_URI=${MONGO_URI_COURS}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./Cours:/app
+      - /app/node_modules
+    command: node --watch index.js
+    depends_on:
+      - mongodb
+
+  feedback-service:
+    build: ./Feedback
+    ports:
+      - "${FEEDBACK_PORT}:${FEEDBACK_PORT}"
+    environment:
+      - PORT=${FEEDBACK_PORT}
+      - MONGO_URI=${MONGO_URI_FEEDBACK}
+      - JWT_SECRET=${JWT_SECRET}
+      - COURS_SERVICE_URL=${COURS_SERVICE_URL}
+    volumes:
+      - ./Feedback:/app
+      - /app/node_modules
+    command: node --watch index.js
+    depends_on:
+      - mongodb
+      - cours-service
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    environment:
+      - NEXT_PUBLIC_AUTH_SERVICE_URL=${NEXT_PUBLIC_AUTH_SERVICE_URL}
+      - NEXT_PUBLIC_COURS_SERVICE_URL=${NEXT_PUBLIC_COURS_SERVICE_URL}
+      - NEXT_PUBLIC_FEEDBACK_SERVICE_URL=${NEXT_PUBLIC_FEEDBACK_SERVICE_URL}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+    depends_on:
+      - auth-service
+      - cours-service
+      - feedback-service
+
+volumes:
+  mongodb_data:

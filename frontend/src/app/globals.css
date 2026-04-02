@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bs-body-bg: #0f172a;
+  --bs-body-color: #f8fafc;
+  --bs-primary: #6366f1;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card {
+  background-color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Standardize 'appearance' for browser compatibility and to satisfy linters */
+[type=button],
+[type=reset],
+[type=submit],
+button {
+  appearance: button;
+}
+
+[type=search] {
+  appearance: textfield;
+}
